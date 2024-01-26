@@ -30,6 +30,7 @@ type Application struct {
 	Hls        bool     `mapstructure:"hls"`
 	Flv        bool     `mapstructure:"flv"`
 	Api        bool     `mapstructure:"api"`
+	Ws         bool     `mapstructure:"ws"`
 	StaticPush []string `mapstructure:"static_push"`
 }
 
