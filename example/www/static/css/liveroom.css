@@ -1,0 +1,47 @@
+.container-fluid{
+    padding:10px 20px 10px 20px;
+}
+.col{
+    padding-right: 5px;
+    padding-left: 5px !important;
+}
+
+#username{
+    font-weight:bold;
+}
+.dmk-frame{
+    height:100%;
+    width:100%;
+    position: relative;
+    display:flex;
+
+}
+.dmk-tips{
+    overflow-y:hidden;
+    height:50px;
+    position:absolute;
+    right:5px;
+    left:5px;
+}
+.dmk-list{
+    overflow-y:scroll;
+    top:0px;
+    bottom:50px;
+    right:5px;
+    left:5px;
+    position:absolute;
+    margin-top:60px;
+    border:1px solid #dddddd;
+    border-radius: 0.25rem;
+    padding:10px;
+}
+
+.dmk-control{
+    overflow-y:hidden;
+    height:40px;
+    position:absolute;
+    right:5px;
+    left:5px;
+    bottom:-2px;
+}
+
