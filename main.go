@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/tls"
 	"fmt"
+	"github.com/gwuhaolin/livego/protocol/websocket"
 	"net"
 	"path"
 	"runtime"
@@ -67,7 +68,6 @@ func startRtmp(stream *rtmp.RtmpStream, hlsServer *hls.Server) {
 	}
 
 	var rtmpServer *rtmp.Server
-
 	if hlsServer == nil {
 		rtmpServer = rtmp.NewRtmpServer(stream, nil)
 		log.Info("HLS server disable....")
@@ -107,6 +107,20 @@ func startHTTPFlv(stream *rtmp.RtmpStream) {
 		log.Info("HTTP-FLV listen On ", httpflvAddr)
 		hdlServer.Serve(flvListen)
 	}()
+}
+
+func startWs(stream *rtmp.RtmpStream) {
+	wsServer := websocket.NewServer(stream)
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Error("Websocket server panic: ", r)
+			}
+		}()
+		log.Info("Websocket listen On ", configure.Config.GetString("ws_addr"))
+		wsServer.ServWebsocket(stream, configure.Config)
+	}()
+
 }
 
 func startAPI(stream *rtmp.RtmpStream) {
@@ -168,6 +182,9 @@ func main() {
 		}
 		if app.Flv {
 			startHTTPFlv(stream)
+		}
+		if app.Ws {
+			startWs(stream)
 		}
 		if app.Api {
 			startAPI(stream)

@@ -2,14 +2,13 @@ package httpflv
 
 import (
 	"encoding/json"
-	"net"
-	"net/http"
-	"strings"
-
 	"github.com/gwuhaolin/livego/av"
 	"github.com/gwuhaolin/livego/protocol/rtmp"
-
 	log "github.com/sirupsen/logrus"
+	"net"
+	"net/http"
+	"net/url"
+	"strings"
 )
 
 type Server struct {
@@ -40,10 +39,44 @@ func (server *Server) Serve(l net.Listener) error {
 	mux.HandleFunc("/streams", func(w http.ResponseWriter, r *http.Request) {
 		server.getStream(w, r)
 	})
+	hubs := make(map[string]*Hub)
+	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		query, e := url.Parse(r.RequestURI)
+		if e == nil {
+			args, e2 := url.ParseQuery(query.RawQuery)
+			if e2 == nil && args["room"] != nil {
+				room := args["room"]
+				if room != nil && len(room) > 0 {
+					if hubs[room[0]] == nil {
+						hubs[room[0]] = newHub()
+						go hubs[room[0]].run()
+					}
+					serveWs(hubs[room[0]], w, r)
+				}
+			}
+		}
+
+	})
+
 	if err := http.Serve(l, mux); err != nil {
 		return err
 	}
 	return nil
+}
+
+func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+	println("established connection from" + r.RemoteAddr)
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	client.hub.register <- client
+	// Allow collection of memory referenced by the caller by doing all work in
+	// new goroutines.
+	go client.writePump()
+	go client.readPump()
 }
 
 // 获取发布和播放器的信息

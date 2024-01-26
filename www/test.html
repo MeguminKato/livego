@@ -1,0 +1,17 @@
+<script src="webrtmp.js"></script>
+<video id="videoElement"></video>
+<script>
+    const videoElement = document.getElementById('videoElement');
+    
+    const rtmp_player = webrtmpjs.createWebRTMP();
+    
+    rtmp_player.attachMediaElement(videoElement);
+
+    rtmp_player.open(document.location.host.split(":")[0], 7002).then(()=>{   // Host, Port of WebRTMP Proxy
+        rtmp_player.connect("live").then(()=>{                  // Application name  
+            rtmp_player.play("test").then(()=>{      // Stream name
+                console.log("playing");
+            })
+        })
+    })
+</script>
