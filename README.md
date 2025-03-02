@@ -4,8 +4,9 @@
 
 [中文](./README_cn.md)
 
-[![Test](https://github.com/gwuhaolin/livego/workflows/Test/badge.svg)](https://github.com/gwuhaolin/livego/actions?query=workflow%3ATest)
-[![Release](https://github.com/gwuhaolin/livego/workflows/Release/badge.svg)](https://github.com/gwuhaolin/livego/actions?query=workflow%3ARelease)
+[![Test](https://github.com/gwuhaolin/livego/actions/workflows/test.yml/badge.svg)](https://github.com/gwuhaolin/livego/actions/workflows/test.yml)
+[![Release](https://github.com/gwuhaolin/livego/actions/workflows/release.yml/badge.svg)](https://github.com/gwuhaolin/livego/actions/workflows/release.yml)
+[![CodeQL Advanced](https://github.com/gwuhaolin/livego/actions/workflows/codeql.yml/badge.svg)](https://github.com/gwuhaolin/livego/actions/workflows/codeql.yml)
 
 Simple and efficient live broadcast server:
 - Very simple to install and use;
